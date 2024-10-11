@@ -1,0 +1,6 @@
+Original: hello
+good night
+
+Translated (Hindi): नमस्ते
+शुभ रात्रि
+

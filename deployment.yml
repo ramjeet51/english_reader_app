@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: english-reader-deployment
+spec:
+  replicas: 2  # Number of replicas (adjust as needed)
+  selector:
+    matchLabels:
+      app: english-reader
+  template:
+    metadata:
+      labels:
+        app: english-reader
+    spec:
+      containers:
+        - name: english-reader
+          image: <your-docker-username>/english_reader_web:latest  # Replace with your Docker image name
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_ENV
+              value: "production"  # Optional: Set Flask environment to production

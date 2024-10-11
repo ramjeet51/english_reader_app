@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Reader with Translation</title>
+    <script>
+        function readText(text) {
+            // Use the Web Speech API for text-to-speech
+            const utterance = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function translateText() {
+            const text = document.getElementById('textInput').value;
+            fetch('/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'text=' + encodeURIComponent(text)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('hindiOutput').innerText = 'Translated (Hindi): ' + data.hindi_text;
+                    readText(text); // Read the English text
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        function clearHistory() {
+            fetch('/clear_history', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                document.getElementById('history').innerText = "No history available."; // Clear displayed history
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>English Reader with Translation</h1>
+    <textarea id="textInput" rows="4" cols="50" placeholder="Enter text to read and translate..."></textarea><br>
+    <button onclick="translateText()">Read and Translate</button>
+    <button onclick="clearHistory()">Clear History</button>
+    <h2 id="hindiOutput"></h2>
+    <h3>History of read texts (with translation):</h3>
+    <pre id="history">{{ history }}</pre>
+</body>
+</html>
